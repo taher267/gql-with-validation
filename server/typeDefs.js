@@ -13,5 +13,6 @@ type Query {
 }
 type Mutation {
   addBook(newBook: InputBook!):Book!
+  deleteBook(id:ID!):Boolean
 }
 `;

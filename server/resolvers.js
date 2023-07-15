@@ -8,12 +8,19 @@ export default {
     },
     Mutation: {
         addBook: (_, { newBook }) => {
-            console.log(newBook, "newbook");
             const allbooks = allBooks();
             const resp = { ...newBook, id: (allbooks.length + 1).toString() };
             allbooks.push(resp);
             fs.writeFileSync("./db/book.json", JSON.stringify(allbooks));
             return resp;
+        },
+        deleteBook: (_, { id }) => {
+            const allbooks = allBooks();
+            fs.writeFileSync(
+                "./db/book.json",
+                JSON.stringify(allbooks.filter((item) => item.id !== id))
+            );
+            return true;
         },
     },
 };

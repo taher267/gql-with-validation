@@ -13,5 +13,8 @@
     "@apollo/server": "^4.7.5",
     "graphql": "^16.7.1",
     "graphql-constraint-directive": "^5.1.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0"
   }
 }

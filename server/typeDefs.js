@@ -1,5 +1,6 @@
 export default `
 type Book {
+  id: ID!
   title: String
   author: String
 }
@@ -8,9 +9,9 @@ input InputBook {
   author: String!
 }
 type Query {
-  books: [Book]
+  books: [Book!]
 }
 type Mutation {
-  addBook(newBook: InputBook):Book
+  addBook(newBook: InputBook!):Book!
 }
 `;

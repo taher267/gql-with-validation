@@ -6,7 +6,7 @@ type Book {
 }
 input InputBook {
   title: String! @constraint(minLength: 5)
-  author: String!
+  author: String! @constraint(maxLength: 5)
 }
 type Query {
   books: [Book!]

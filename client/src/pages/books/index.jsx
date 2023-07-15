@@ -49,6 +49,20 @@ export default function Book() {
           },
         });
       },
+      onCompleted: () => {
+        closeHandler();
+      },
+      onError: (e) => {
+        console.log(e.graphQLErrors[e.graphQLErrors.length - 1]);
+        const errors = {};
+        // e.graphQLErrors.forEach(({ error }) => {
+        //   const [key, value] = Object.entries(error)[0];
+        //   errors[key] = value;
+        // });
+        // // alert(e.message);
+
+        // console.log(errors);
+      },
     }
   );
   // console.log(newData);
@@ -60,8 +74,6 @@ export default function Book() {
     mutationFunc({ variables: { newBook } });
   };
   const closeHandler = () => setOpen((p) => !p);
-  const changeHandler = ({ target }) =>
-    setValues({ [target.name]: target.value });
   return (
     <>
       <Head>
@@ -127,10 +139,10 @@ export default function Book() {
           </Modal>
           <h2>Books</h2>
           <div>
-            {data?.books?.map?.((book, i) => {
+            {[...(data?.books || [])].map((book, i) => {
               return (
                 <div key={i} style={{ display: "flex" }}>
-                  {/* <p>{book.id}</p> */}
+                  <p>{book.id}</p>
                   {`=>`}
                   <p>{book.title}</p>
                   {`=>`}

@@ -15,4 +15,8 @@ type Mutation {
   addBook(newBook: InputBook!):Book!
   deleteBook(id:ID!):Boolean
 }
+type Subscription {
+  bookAdded:Book!
+}
+
 `;

@@ -1,4 +1,6 @@
 import fs from "fs";
+import { PubSub } from "graphql-subscriptions";
+const pubsub = new PubSub();
 
 const allBooks = () => JSON.parse(fs.readFileSync("./db/book.json").toString());
 
@@ -12,6 +14,9 @@ export default {
             const resp = { ...newBook, id: (allbooks.length + 1).toString() };
             allbooks.push(resp);
             fs.writeFileSync("./db/book.json", JSON.stringify(allbooks));
+            pubsub.publish("ADD_BOOK", {
+                bookAdded: { ...resp },
+            });
             return resp;
         },
         deleteBook: (_, { id }) => {
@@ -22,5 +27,10 @@ export default {
             );
             return true;
         },
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator('ADD_BOOK')
+        }
     },
 };

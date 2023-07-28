@@ -1,3 +1,5 @@
+import env from "dotenv";
+env.config();
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
@@ -15,6 +17,7 @@ import {
     constraintDirectiveTypeDefs,
 } from "graphql-constraint-directive";
 import respErrsKeyValues from "./helper/respErrsKeyValues.js";
+import db from "./db/index.js";
 // Create the schema, which will be used separately by ApolloServer and
 // the WebSocket server
 
@@ -75,7 +78,13 @@ const server = new ApolloServer({
     app.use("/", cors(), bodyParser.json(), expressMiddleware(server));
     const PORT = process.env.PORT || 4000;
     // Now that our HTTP server is fully set up, we can listen to it.
-    httpServer.listen(PORT, () => {
-        console.log(`Server is now running on http://localhost:${PORT}`);
-    });
+    db()
+        .then(() => {
+            httpServer.listen(PORT, () => {
+                console.log(`Server is now running on http://localhost:${PORT}`);
+            });
+        })
+        .catch(() => {
+            process.exit(1);
+        });
 })();

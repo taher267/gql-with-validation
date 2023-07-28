@@ -1,19 +1,19 @@
 export default `
 type Book {
-  id: ID!
+  _id: ID!
   title: String
   author: String
 }
 input InputBook {
-  title: String! @constraint(minLength: 5)
-  author: String! @constraint(maxLength: 5)
+  title: String! @constraint(minLength: 3)
+  author: String! @constraint(minLength: 2)
 }
 type Query {
   books: [Book!]
 }
 type Mutation {
   addBook(newBook: InputBook!):Book!
-  deleteBook(id:ID!):Boolean
+  deleteBook(_id:ID!):Boolean
 }
 type Subscription {
   bookAdded:Book!

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Inter } from "next/font/google";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import Modal from "@/components/Modal";
 import React from "react";
 // import { client } from "@/context/ApolloWrapper";
@@ -9,25 +9,35 @@ const inter = Inter({ subsets: ["latin"] });
 const GET_BOOKS = gql`
   query getBooks {
     books {
-      id
+      _id
       author
       title
     }
   }
 `;
 
-const ADD_BOOKS = gql`
+const ADD_BOOK = gql`
   mutation addBook($newBook: InputBook!) {
     addBook(newBook: $newBook) {
-      id
+      _id
       title
       author
     }
   }
 `;
 const DEL_BOOK = gql`
-  mutation deleteBook($id: ID!) {
-    deleteBook(id: $id)
+  mutation deleteBook($_id: ID!) {
+    deleteBook(_id: $_id)
+  }
+`;
+
+const SUBS_ADD_BOOK = gql`
+  subscription Subscription {
+    bookAdded {
+      author
+      _id
+      title
+    }
   }
 `;
 export default function Book() {
@@ -35,7 +45,9 @@ export default function Book() {
   const [delId, setDelId] = React.useState(null);
   const [inputErrs, setInputErrs] = React.useState(null);
   let { data } = useQuery(GET_BOOKS);
-  const [mutationFunc, { loading }] = useMutation(ADD_BOOKS, {
+  let { data: subData } = useSubscription(SUBS_ADD_BOOK);
+  console.log(subData, "subData");
+  const [mutationFunc, { loading }] = useMutation(ADD_BOOK, {
     update(cache, { data: { addBook } }) {
       cache.modify({
         fields: {
@@ -71,10 +83,9 @@ export default function Book() {
       update(cache) {
         //  * 1st Way
         console.log(delId, "delid");
-        const normalizedId = cache.identify({ id: delId, __typename: "Book" });
-        cache.evict({ id: normalizedId });
+        const normalizedId = cache.identify({ _id: delId, __typename: "Book" });
+        cache.evict({ _id: normalizedId });
         cache.gc();
-
         /**
        * 2nd Way
        * 
@@ -207,15 +218,15 @@ export default function Book() {
             {[...(data?.books || [])].map((book, i) => {
               return (
                 <div key={i} style={{ display: "flex" }}>
-                  <p>{book.id}</p>
+                  <p>{book._id}</p>
                   {`=>`}
                   <p>{book.title}</p>
                   {`=>`}
                   <p>{book.author}</p>
                   <p
                     onClick={() => {
-                      setDelId(book.id);
-                      mutationDel({ variables: { id: book.id } });
+                      setDelId(book._id);
+                      mutationDel({ variables: { _id: book._id } });
                     }}
                     style={{ color: "red" }}
                   >

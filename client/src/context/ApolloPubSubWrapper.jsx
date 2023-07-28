@@ -3,14 +3,22 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-
+//
 const httpLink = new HttpLink({
-  uri: "http://localhost:4000/",
+  uri:
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:4000/"
+      : "https://gql-ws-server.vercel.app/",
+  // uri: "https://gql-ws-server.vercel.app",
 });
-
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://localhost:4000/",
+    url:
+      process.env.NODE_ENV === "development"
+        ? // ? "ws://localhost:4000"
+          "ws://localhost:4000/subscriptions"
+        : "wss://gql-ws-server.vercel.app/subscriptions",
+    // url: "wss://gql-ws-server.vercel.app",
     // url: 'ws://localhost:4000/subscriptions',
     // connectionParams: {
     //   authToken: user.authToken,

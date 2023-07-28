@@ -1,36 +1,23 @@
-import fs from "fs";
 import { PubSub } from "graphql-subscriptions";
-const pubsub = new PubSub();
-
-const allBooks = () => JSON.parse(fs.readFileSync("./db/book.json").toString());
+import Book from "./book/book.model.js";
+import bookController from "./book/book.controller.js";
+export const pubsub = new PubSub();
 
 export default {
     Query: {
-        books: allBooks,
+        books: bookController.allBooks,
     },
     Mutation: {
-        addBook: (_, { newBook }) => {
-            const allbooks = allBooks();
-            const resp = { ...newBook, id: (allbooks.length + 1).toString() };
-            allbooks.push(resp);
-            fs.writeFileSync("./db/book.json", JSON.stringify(allbooks));
-            pubsub.publish("ADD_BOOK", {
-                bookAdded: { ...resp },
-            });
-            return resp;
-        },
-        deleteBook: (_, { id }) => {
-            const allbooks = allBooks();
-            fs.writeFileSync(
-                "./db/book.json",
-                JSON.stringify(allbooks.filter((item) => item.id !== id))
-            );
+        addBook: bookController.addBook,
+        deleteBook: async (_, { _id }) => {
+            console.log(_id);
+            await Book.deleteOne({ _id });
             return true;
         },
     },
     Subscription: {
         bookAdded: {
-            subscribe: () => pubsub.asyncIterator('ADD_BOOK')
-        }
+            subscribe: () => pubsub.asyncIterator(["ADD_BOOK"]),
+        },
     },
 };

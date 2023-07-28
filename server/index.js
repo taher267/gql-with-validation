@@ -1,47 +1,50 @@
-// import express from "express";
-// import { expressMiddleware } from "@apollo/server/express4";
-// import cors from "cors";
-// const app = express();
+import env from "dotenv";
+env.config();
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { createServer } from "http";
+import express from "express";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
+import bodyParser from "body-parser";
+import cors from "cors";
 import resolvers from "./resolvers.js";
 import typeDefs from "./typeDefs.js";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { createServer } from 'http';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import { WebSocketServer } from 'ws';
-import { useServer } from 'graphql-ws/lib/use/ws';
 import {
     constraintDirective,
     constraintDirectiveTypeDefs,
 } from "graphql-constraint-directive";
 import respErrsKeyValues from "./helper/respErrsKeyValues.js";
-import express from 'express';
-const app = express();
+import db from "./db/index.js";
+// Create the schema, which will be used separately by ApolloServer and
+// the WebSocket server
 
 let schema = makeExecutableSchema({
     typeDefs: [constraintDirectiveTypeDefs, typeDefs],
     resolvers,
 });
 schema = constraintDirective()(schema);
+
+// Create an Express app and HTTP server; we will attach both the WebSocket
+// server and the ApolloServer to this HTTP server.
+const app = express();
 const httpServer = createServer(app);
 
-// Creating the WebSocket server
+// Create our WebSocket server using the HTTP server we just set up.
 const wsServer = new WebSocketServer({
-    // This is the `httpServer` we created in a previous step.
     server: httpServer,
-    // Pass a different path here if app.use
-    // serves expressMiddleware at a different path
-    path: '/',
-    // path: '/graphql',
+    // path: "/",
 });
-
-// Hand in the schema we just created and have the
-// WebSocketServer start listening.
+// Save the returned server's info so we can shutdown this server later
 const serverCleanup = useServer({ schema }, wsServer);
+
+// Set up ApolloServer.
 const server = new ApolloServer({
     schema,
     plugins: [
+        // Proper shutdown for the HTTP server.
         ApolloServerPluginDrainHttpServer({ httpServer }),
         {
             async requestDidStart() {
@@ -56,25 +59,31 @@ const server = new ApolloServer({
                 };
             },
         },
+        // Proper shutdown for the WebSocket server.
+        {
+            async serverWillStart() {
+                return {
+                    async drainServer() {
+                        await serverCleanup.dispose();
+                    },
+                };
+            },
+        },
     ],
 });
-const { url } = await startStandaloneServer(server, {
-    context: () => { },
-});
-console.log(`🚀 Server ready at ${url}`);
 
-// server.logger.info()
-// const middlewires = [
-//     cors(),
-//     expressMiddleware(server, {
-//         context: async ({ req }) => ({ token: req.headers.token }),
-//     }),
-// ];
+(async () => {
+    await server.start();
 
-// if (process.env.NODE_ENV) {
-//     const morgan = await import("morgan");
-//     middlewires.push(morgan.default("dev"));
-// }
-// app.use("/", middlewires, (req, res, next) => {
-//     console.log(req);
-// });
+    app.use("/", cors(), bodyParser.json(), expressMiddleware(server));
+    const PORT = process.env.PORT || 4000;
+    db()
+        .then(() => {
+            httpServer.listen(PORT, () => {
+                console.log(`Server is now running on http://localhost:${PORT}`); //graphql
+            });
+        })
+        .catch(() => {
+            process.exit(1);
+        });
+})();

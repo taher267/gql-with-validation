@@ -75,7 +75,7 @@ const server = new ApolloServer({
 (async () => {
     await server.start();
 
-    app.use("/", cors(), bodyParser.json(), expressMiddleware(server));
+    app.use("/graphql", cors(), bodyParser.json(), expressMiddleware(server));
     const PORT = process.env.PORT || 4000;
     db()
         .then(() => {

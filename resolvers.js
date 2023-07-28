@@ -1,8 +1,9 @@
 import fs from "fs";
+import path from "path";
 import { PubSub } from "graphql-subscriptions";
 const pubsub = new PubSub();
 
-const allBooks = () => JSON.parse(fs.readFileSync("./db/book.json").toString());
+const allBooks = () => JSON.parse(fs.readFileSync(path.resolve("db/book.json")).toString());
 
 export default {
     Query: {

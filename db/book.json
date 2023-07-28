@@ -1,1 +1,5 @@
-[{"title":"title@gmail.com","author":"auor","id":"1"},{"title":"newOne","author":"sub","id":"2"},{"title":"anotherone","author":"yeah","id":"3"}]
+[
+  { "title": "title@gmail.com", "author": "auor", "id": "1" },
+  { "title": "newOne", "author": "sub", "id": "2" },
+  { "title": "anotherone", "author": "yeah", "id": "3" }
+]

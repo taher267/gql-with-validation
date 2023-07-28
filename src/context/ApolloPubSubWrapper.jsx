@@ -14,7 +14,7 @@ const httpLink = new HttpLink({
   //   process.env.NODE_ENV === "development"
   //     ? "http://localhost:4000/"
   //     : "https://gql-ws-server.onrender.com/",
-  uri: "https://gql-ws-server.vercel.app",
+  uri: "https://gql-ws-server.vercel.app/",
 });
 const wsLink = new GraphQLWsLink(
   createClient({
@@ -27,7 +27,7 @@ const wsLink = new GraphQLWsLink(
     //   process.env.NODE_ENV === "development"
     //     ? "ws://localhost:4000/subscriptions"
     //     : "wss://gql-ws-server.onrender.com",
-    url: "ws://gql-ws-server.onrender.com",
+    url: "wss://gql-ws-server.onrender.com/",
     // url: 'ws://localhost:4000/subscriptions',
     // connectionParams: {
     //   authToken: user.authToken,

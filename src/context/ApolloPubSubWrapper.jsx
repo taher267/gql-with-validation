@@ -5,20 +5,29 @@ import { createClient } from "graphql-ws";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 //
 const httpLink = new HttpLink({
-  uri:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:4000/"
-      : "https://gql-ws-server.vercel.app/",
-  // uri: "https://gql-ws-server.vercel.app",
+  // uri:
+  //   process.env.NODE_ENV === "development"
+  //     ? "http://localhost:4000/"
+  //     : "https://gql-ws-server.vercel.app/",
+
+  // uri:
+  //   process.env.NODE_ENV === "development"
+  //     ? "http://localhost:4000/"
+  //     : "https://gql-ws-server.onrender.com/",
+  uri: "https://gql-ws-server.vercel.app",
 });
 const wsLink = new GraphQLWsLink(
   createClient({
-    url:
-      process.env.NODE_ENV === "development"
-        ? // ? "ws://localhost:4000"
-          "ws://localhost:4000/subscriptions"
-        : "wss://gql-ws-server.vercel.app/graphql",
-    // url: "wss://gql-ws-server.vercel.app",
+    // url:
+    //   process.env.NODE_ENV === "development"
+    //     ? // ? "ws://localhost:4000"
+    //       "ws://localhost:4000/subscriptions"
+    //     : "wss://gql-ws-server.vercel.app",
+    // url:
+    //   process.env.NODE_ENV === "development"
+    //     ? "ws://localhost:4000/subscriptions"
+    //     : "wss://gql-ws-server.onrender.com",
+    url: "wss://gql-ws-server.onrender.com",
     // url: 'ws://localhost:4000/subscriptions',
     // connectionParams: {
     //   authToken: user.authToken,

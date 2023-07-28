@@ -16,6 +16,7 @@ import respErrsKeyValues from "./helper/respErrsKeyValues.js";
 let schema = makeExecutableSchema({
     typeDefs: [constraintDirectiveTypeDefs, typeDefs],
     resolvers,
+
 });
 schema = constraintDirective()(schema);
 
@@ -39,8 +40,12 @@ const server = new ApolloServer({
             },
         },
     ],
+
 });
 const { url } = await startStandaloneServer(server, {
     context: () => { },
+    listen: {
+        port: process.env.PORT || 4000
+    }
 });
 console.log(`🚀 Server ready at ${url}`);

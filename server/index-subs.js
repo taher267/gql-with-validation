@@ -16,7 +16,7 @@ import {
 } from "graphql-constraint-directive";
 import respErrsKeyValues from "./helper/respErrsKeyValues.js";
 // Create the schema, which will be used separately by ApolloServer and
-// the WebSocket server.
+// the WebSocket server
 
 let schema = makeExecutableSchema({
     typeDefs: [constraintDirectiveTypeDefs, typeDefs],

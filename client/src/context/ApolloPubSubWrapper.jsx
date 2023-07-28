@@ -30,7 +30,7 @@ const wsLink = new GraphQLWsLink(
     url: "wss://gql-ws-server.onrender.com/subscriptions",
     // url: 'ws://localhost:4000/subscriptions',
     // connectionParams: {
-    //   authToken: user.authToken,
+    //   authToken: user.authToken
     // },
   })
 );

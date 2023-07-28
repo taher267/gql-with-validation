@@ -42,10 +42,12 @@ const server = new ApolloServer({
     ],
 
 });
-const { url } = await startStandaloneServer(server, {
-    context: () => { },
-    listen: {
-        port: process.env.PORT || 4000
-    }
-});
-console.log(`🚀 Server ready at ${url}`);
+(async () => {
+    const { url } = await startStandaloneServer(server, {
+        context: () => { },
+        listen: {
+            port: process.env.PORT || 4000
+        }
+    });
+    console.log(`🚀 Server ready at ${url}`);
+})();

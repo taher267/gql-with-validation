@@ -77,7 +77,6 @@ const server = new ApolloServer({
 
     app.use("/", cors(), bodyParser.json(), expressMiddleware(server));
     const PORT = process.env.PORT || 4000;
-    // Now that our HTTP server is fully set up, we can listen to it.
     db()
         .then(() => {
             httpServer.listen(PORT, () => {

@@ -17,7 +17,7 @@ export default {
     },
     Subscription: {
         bookAdded: {
-            subscribe: () => pubsub.asyncIterator("ADD_BOOK"),
+            subscribe: () => pubsub.asyncIterator(["ADD_BOOK"]),
         },
     },
 };

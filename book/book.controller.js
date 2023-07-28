@@ -29,7 +29,7 @@ export default {
     allBooks: async (_, { }) => {
         try {
             const books = await Book.find().exec();
-            console.log(books)
+            // console.log(books)
             return books;
         } catch (e) {
             // BAD_USER_INPUT

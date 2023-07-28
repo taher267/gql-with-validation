@@ -35,7 +35,7 @@ const httpServer = createServer(app);
 // Create our WebSocket server using the HTTP server we just set up.
 const wsServer = new WebSocketServer({
     server: httpServer,
-    path: "/graphql",
+    // path: "/",
 });
 // Save the returned server's info so we can shutdown this server later
 const serverCleanup = useServer({ schema }, wsServer);
@@ -75,12 +75,14 @@ const server = new ApolloServer({
 (async () => {
     await server.start();
 
-    app.use("/graphql", cors(), bodyParser.json(), expressMiddleware(server));
+    app.use("/", cors({
+        origin: "*"
+    }), bodyParser.json(), expressMiddleware(server));
     const PORT = process.env.PORT || 4000;
     db()
         .then(() => {
             httpServer.listen(PORT, () => {
-                console.log(`Server is now running on http://localhost:${PORT}/graphql`);
+                console.log(`Server is now running on http://localhost:${PORT}`); //graphql
             });
         })
         .catch(() => {

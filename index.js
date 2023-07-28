@@ -35,7 +35,7 @@ const httpServer = createServer(app);
 // Create our WebSocket server using the HTTP server we just set up.
 const wsServer = new WebSocketServer({
     server: httpServer,
-    path: "/",
+    path: "/ws",
 });
 // Save the returned server's info so we can shutdown this server later
 const serverCleanup = useServer({ schema }, wsServer);

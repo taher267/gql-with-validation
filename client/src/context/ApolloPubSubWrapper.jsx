@@ -27,7 +27,7 @@ const wsLink = new GraphQLWsLink(
     //   process.env.NODE_ENV === "development"
     //     ? "ws://localhost:4000/subscriptions"
     //     : "wss://gql-ws-server.onrender.com",
-    url: "wss://gql-ws-server.onrender.com/subscriptions",
+    url: "wss://gql-ws-server.onrender.com",
     // url: 'ws://localhost:4000/subscriptions'
     // connectionParams: {
     //   authToken: user.authToken

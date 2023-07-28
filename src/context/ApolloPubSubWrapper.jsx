@@ -17,7 +17,7 @@ const wsLink = new GraphQLWsLink(
       process.env.NODE_ENV === "development"
         ? // ? "ws://localhost:4000"
           "ws://localhost:4000/subscriptions"
-        : "wss://gql-ws-server.vercel.app",
+        : "wss://gql-ws-server.vercel.app/graphql",
     // url: "wss://gql-ws-server.vercel.app",
     // url: 'ws://localhost:4000/subscriptions',
     // connectionParams: {

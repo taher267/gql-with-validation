@@ -43,19 +43,14 @@ const server = new ApolloServer({
 
 });
 (async () => {
-    // const { url } = await startStandaloneServer(server, {
-    //     context: () => { },
-    //     listen: {
-    //         port: process.env.PORT || 4000
-    //     }
-    // });
-    // console.log(`🚀 Server ready at ${url}`);
+    const { url } = await startStandaloneServer(server);
+    console.log(`🚀 Server ready at ${url}`);
 })();
 
-const { url } = await startStandaloneServer(server, {
-    context: () => { },
-    listen: {
-        port: process.env.PORT || 4000
-    }
-});
-console.log(`🚀 Server ready at ${url}`);
+// const { url } = await startStandaloneServer(server, {
+//     context: () => { },
+//     // listen: {
+//     //     port: process.env.PORT || 4000
+//     // }
+// });
+// console.log(`🚀 Server ready at ${url}`);

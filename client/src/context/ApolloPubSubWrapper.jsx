@@ -7,13 +7,13 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 const httpLink = new HttpLink({
   // uri:
   //   process.env.NODE_ENV === "development"
-  //     ? "http://localhost:4000/"
-  //     : "https://gql-ws-server.vercel.app/"
+  //     ? "http://localhost:4000"
+  //     : "https://gql-ws-server.vercel.app"
 
   // uri:
   //   process.env.NODE_ENV === "development"
-  //     ? "http://localhost:4000/"
-  //     : "https://gql-ws-server.onrender.com/"
+  //     ? "http://localhost:4000"
+  //     : "https://gql-ws-server.onrender.com"
   uri: "https://gql-ws-server.onrender.com",
 });
 const wsLink = new GraphQLWsLink(
